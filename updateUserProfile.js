@@ -1,6 +1,6 @@
 const handleUpdateProfile = (db) => (req, res) => {
     const {uname,fname,lname,instaid,twitterid,subsrate,bio,isinstaidpublic,istwitteridpublic} = req.body;
-    if (!(uname && fname && lname && instaid && twitterid && subsrate && bio && isinstaidpublic && istwitteridpublic))
+    if (!(uname && fname && lname&& subsrate && bio))
     return res.status(400).json("Fill in all details!");
     db.select("*")
       .from("Users")
@@ -14,7 +14,7 @@ const handleUpdateProfile = (db) => (req, res) => {
               return res.status(200).json("Successfully Updated");
         }
          else{
-            return res.status(404).json("Unsuccessfull attempt to update");
+            return res.status(400).json("Unsuccessfull attempt to update");
          }
       })
       .catch((err) => res.status(400).json("connection error"));

@@ -1,5 +1,5 @@
 const handleViewSelf = (db) => (req, res) => {
-    const {uname} = req.body;
+    const {uname} = req.params;
     if (!uname ) return res.status(400).json("Fill in all details!");
     db.select("*")
       .from("Users")
@@ -14,5 +14,5 @@ const handleViewSelf = (db) => (req, res) => {
       .catch((err) => res.status(400).json(err));
   };
   
-  module.exports = { handleViewSelf: handleViewSelf };
+  module.exports = { handleViewSelf };
   
