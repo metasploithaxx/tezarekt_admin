@@ -7,7 +7,6 @@ const handleChatPost = (db) => (req, res) => {
       .insert({uname,owner,message,subscribermsg})
       .then((data)=>{
             return res.status(200).json("Chat send");
-        
       })
       .catch((err)=>{
           res.status.status(404).json(err);

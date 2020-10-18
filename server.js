@@ -24,6 +24,12 @@ var db = require("knex")({
     password:"91765eb1c50258cb38df2b627e89aca61bed766410125d0774cab3c461296ec2",
     // connectionString: process.env.DATABASE_URL,
     ssl: true,
+    typeCast: function (field, next) {
+      if (field.type == 'timestamp') {
+        return moment(field.string()).format('YYYY-MM-DD HH:mm:ss');
+      }
+      return next();
+    }
   },
 });
 
