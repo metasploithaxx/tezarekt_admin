@@ -39,6 +39,7 @@ app.use(cors());
 
 // app.get("/", getUsers.handleUsers(db));
 app.post("/signin", signIn.handleSignin(db, bcrypt));
+app.post('/signout',signIn.handleSignout(db));
 app.post("/register", register.handleRegister(db));
 app.get("/profile/self/:uname",selfprofile.handleViewSelf(db));
 app.post("/updateUserProfile",updateUserProfile.handleUpdateProfile(db));

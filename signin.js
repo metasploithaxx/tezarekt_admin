@@ -11,15 +11,32 @@ const handleSignin = (db, bcrypt) => (req, res) => {
             .from("Credentials")
             .where({uname})
             .update({ ip , isloggedin:true })
-            .then((data)=>{ 
-              res.status(200).json("success");
-            })
+            .then((data)=>
+              res.status(200).json("success")
+            )
+            .catch((err)=>
+            res.status(400).json("error in updating ip")
+            )
         } else return res.status(400).json("invalid password");
       } else return res.status(404).json("username not registered");
     })
     .catch((err) => res.status(400).json("connection error"));
 };
 const handleSignout=(db) => (req,res)=>{
-  
+  const {uname} = req.body;
+  if(!uname) return res.status(400).json("Fill in all details!");
+  db.select("*")
+      .from("Credentials")
+      .where({uname})
+      .update({ isloggedin:false })
+      .then((data)=>{ 
+        if(data.length)
+        return res.status(200).json("success");
+        else
+        return res.status(400).json("Username does not exist");
+      })
+      .catch((err)=>{
+        res.status(400).json("Connection error")
+      })
 }
-module.exports = { handleSignin: handleSignin };
+module.exports = { handleSignin, handleSignout };
