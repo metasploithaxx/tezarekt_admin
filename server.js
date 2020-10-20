@@ -10,6 +10,7 @@ const updateUserProfile = require('./updateUserProfile');
 const chatView = require('./chatView');
 const chatPost = require('./chatPost');
 const onlineusers = require('./showOnlineUsers');
+const subscribe = require('./subscribe');
 
 const app = express();
 
@@ -48,7 +49,7 @@ app.post("/updateUserProfile",updateUserProfile.handleUpdateProfile(db));
 app.get("/chat/:owner/:uname",chatView.handleChatView(db));
 app.post("/chatPost",chatPost.handleChatPost(db));
 app.get("/onlineUsers",onlineusers.handleOnlineUser(db));
-
+app.post("/subscribe",subscribe.handleSubscribe(db));
 app.listen(
   process.env.PORT || 3000,
   console.log("watching on port " + (process.env.PORT || 3000))
