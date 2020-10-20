@@ -11,6 +11,7 @@ const chatView = require('./chatView');
 const chatPost = require('./chatPost');
 const onlineusers = require('./showOnlineUsers');
 const subscribe = require('./subscribe');
+const getSubscriptionCount = require('./getSubscriptionCount');
 
 const app = express();
 
@@ -50,6 +51,8 @@ app.get("/chat/:owner/:uname",chatView.handleChatView(db));
 app.post("/chatPost",chatPost.handleChatPost(db));
 app.get("/onlineUsers",onlineusers.handleOnlineUser(db));
 app.post("/subscribe",subscribe.handleSubscribe(db));
+app.get('/getSubscriptionCount/:from',getSubscriptionCount.handleViewSubscriptionCount(db));
+
 app.listen(
   process.env.PORT || 3000,
   console.log("watching on port " + (process.env.PORT || 3000))
