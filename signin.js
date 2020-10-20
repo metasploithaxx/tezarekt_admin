@@ -8,9 +8,9 @@ const handleSignin = (db, bcrypt) => (req, res) => {
       if (data.length) {
         if (bcrypt.compareSync(passhash, data[0].passhash)) {
             db.select("*")
-            .from("Credentials")
+            .from("Users")
             .where({uname})
-            .update({ ip , isloggedin:true })
+            .update({ ip , isonline:true })
             .then((data)=>
               res.status(200).json("success")
             )
@@ -26,9 +26,9 @@ const handleSignout=(db) => (req,res)=>{
   const {uname} = req.body;
   if(!uname) return res.status(400).json("Fill in all details!");
   db.select("*")
-      .from("Credentials")
+      .from("Users")
       .where({uname})
-      .update({ isloggedin:false })
+      .update({ isonline:false })
       .then((data)=>{ 
         if(data.length)
         return res.status(200).json("success");

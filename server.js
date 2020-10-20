@@ -9,6 +9,7 @@ const selfprofile = require('./profileView');
 const updateUserProfile = require('./updateUserProfile');
 const chatView = require('./chatView');
 const chatPost = require('./chatPost');
+const onlineusers = require('./showOnlineUsers');
 
 const app = express();
 
@@ -42,14 +43,11 @@ app.post("/signin", signIn.handleSignin(db, bcrypt));
 app.post('/signout',signIn.handleSignout(db));
 app.post("/register", register.handleRegister(db));
 app.get("/profile/self/:uname",selfprofile.handleViewSelf(db));
+app.get("/profile/user/:uname",selfprofile.handleViewUser(db));
 app.post("/updateUserProfile",updateUserProfile.handleUpdateProfile(db));
 app.get("/chat/:owner/:uname",chatView.handleChatView(db));
 app.post("/chatPost",chatPost.handleChatPost(db));
-// app.get("/profile/:id", profile.getProfile(db));
-// app.delete("/profile/:id", profile.deleteProfile(db));
-// app.put("/image", image.handleImage(db));
-// app.post("/imageAPI", image.handleAPI);
-// app.post("/profile/:id", profile.changePass(db));
+app.get("/onlineUsers",onlineusers.handleOnlineUser(db));
 
 app.listen(
   process.env.PORT || 3000,
