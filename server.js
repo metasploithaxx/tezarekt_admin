@@ -12,6 +12,7 @@ const chatPost = require('./chatPost');
 const onlineusers = require('./showOnlineUsers');
 const subscribe = require('./subscribe');
 const getSubscriptionCount = require('./getSubscriptionCount');
+const isSubscribed = require('./isSubscribed');
 
 const app = express();
 
@@ -40,7 +41,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-// app.get("/", getUsers.handleUsers(db));
 app.post("/signin", signIn.handleSignin(db, bcrypt));
 app.post('/signout',signIn.handleSignout(db));
 app.post("/register", register.handleRegister(db));
@@ -52,6 +52,7 @@ app.post("/chatPost",chatPost.handleChatPost(db));
 app.get("/onlineUsers",onlineusers.handleOnlineUser(db));
 app.post("/subscribe",subscribe.handleSubscribe(db));
 app.get('/getSubscriptionCount/:from',getSubscriptionCount.handleViewSubscriptionCount(db));
+app.get('/isSubscribed/:from/:to',isSubscribed.handleIsSubscribed(db));
 
 app.listen(
   process.env.PORT || 3000,
