@@ -8,7 +8,7 @@ const handleSubscribe = (db) => (req, res) => {
         .where({from,to})
         .then((data)=>{
             if(data.length){
-                console.log(data);
+                // console.log(data);
                 return res.status(400).json("Already Subscribed")
             }
             else{
@@ -19,7 +19,7 @@ const handleSubscribe = (db) => (req, res) => {
                         return res.status(200).json("Subscribed");
                     })
                     .catch((err)=>{
-                        return res.status.status(404).json(err);
+                        return res.status.status(404).json("Connection Error");
                     })
             }
         })
@@ -35,12 +35,18 @@ const handleSubscribe = (db) => (req, res) => {
                 .where({from,to})
                 .del()
                 .then((data)=>
-                    res.status(200).json("deleted Successfull")
+                    res.status(200).json("Unsubscribed")
                 )
+                .catch((err)=>{
+                    return res.status.status(404).json("Connection Error");
+                })
             }
             else{
-                res.status(200).json("Already deleted");      
+                res.status(200).json("Already Unsubscribed");      
             }
+        })
+        .catch((err)=>{
+            return res.status.status(404).json("Connection Error");
         })
     }
   };
