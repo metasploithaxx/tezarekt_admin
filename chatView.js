@@ -1,6 +1,6 @@
 const handleChatAllView = (db) => (req, res) => {
   const { uname, owner } = req.params;
-  if (!uname || !owner) return res.status(400).json("Fill in all details!");
+  if (!uname && !owner) return res.status(400).json("Fill in all details!");
   db.select("*")
     .from("Chat")
     .where({owner,subscribermsg:false})
