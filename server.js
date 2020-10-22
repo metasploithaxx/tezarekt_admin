@@ -13,6 +13,8 @@ const onlineusers = require('./showOnlineUsers');
 const subscribe = require('./subscribe');
 const getSubscriptionCount = require('./getSubscriptionCount');
 const isSubscribed = require('./isSubscribed');
+const privateChatPost = require('./privateChatPost');
+const privateChatView = require('./privateChatView');
 
 const app = express();
 
@@ -49,12 +51,13 @@ app.get("/profile/user/:uname",selfprofile.handleViewUser(db));
 app.post("/updateUserProfile",updateUserProfile.handleUpdateProfile(db));
 app.get("/chatAll/:owner/:uname",chatView.handleChatAllView(db));
 app.get("/chatSubs/:owner/:uname",chatView.handleChatSubsView(db));
-app.get("/chatPrivate/:owner/:uname",chatView.handleChatPrivateView(db));
 app.post("/chatPost",chatPost.handleChatPost(db));
 app.get("/onlineUsers",onlineusers.handleOnlineUser(db));
 app.post("/subscribe",subscribe.handleSubscribe(db));
 app.get('/getSubscriptionCount/:from',getSubscriptionCount.handleViewSubscriptionCount(db));
 app.get('/isSubscribed/:from/:to',isSubscribed.handleIsSubscribed(db));
+app.post("/privateChatPost",privateChatPost.handlePrivateChatPost(db));
+app.get('/privateChatView/:from/:to',privateChatView.handleChatPrivateView(db));
 
 app.listen(
   process.env.PORT || 3000,

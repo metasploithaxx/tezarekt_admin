@@ -5,10 +5,9 @@ const handleViewSubscriptionCount = (db) => (req, res) => {
       .from("Subscription")
       .where({from})
       .then((data) => {
-          return res.json(data.length);
+          return res.status(200).json(data.length);
       })
       .catch((err) => res.status(400).json(err));
   };
   
   module.exports = { handleViewSubscriptionCount };
-  
