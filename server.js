@@ -15,6 +15,9 @@ const getSubscriptionCount = require('./getSubscriptionCount');
 const isSubscribed = require('./isSubscribed');
 const privateChatPost = require('./privateChatPost');
 const privateChatView = require('./privateChatView');
+const setStatus = require('./setStatus');
+const getStatus = require('./getStatus');
+const getAllUser = require('./getAllUsers');
 
 const app = express();
 
@@ -58,6 +61,9 @@ app.get('/getSubscriptionCount/:from',getSubscriptionCount.handleViewSubscriptio
 app.get('/isSubscribed/:from/:to',isSubscribed.handleIsSubscribed(db));
 app.post("/privateChatPost",privateChatPost.handlePrivateChatPost(db));
 app.get('/privateChatView/:from/:to',privateChatView.handleChatPrivateView(db));
+app.post('/setStatus',setStatus.handleSetStatus(db));
+app.get('/getStatus/:uname',getStatus.handlegetStatus(db));
+app.get('/getAllUsers',getAllUser.handlegetAllUser(db));
 
 app.listen(
   process.env.PORT || 3000,

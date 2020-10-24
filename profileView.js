@@ -6,10 +6,10 @@ const handleViewSelf = (db) => (req, res) => {
       .where({ uname })
       .then((data) => {
         if (data.length) {
-          return res.json(data[0]);
+          return res.status(200).json(data[0]);
         } 
         else
-         return res.status(404).json("username not registered");
+         return res.status(400).json("username not registered");
       })
       .catch((err) => res.status(400).json(err));
   };
@@ -21,13 +21,12 @@ const handleViewSelf = (db) => (req, res) => {
       .where({ uname })
       .then((data) => {
         if (data.length) {
-          return res.json(data[0]);
+          return res.status(200).json(data[0]);
         } 
         else
-         return res.status(404).json("username not registered");
+         return res.status(400).json("username not registered");
       })
       .catch((err) => res.status(400).json(err));
   };
   
   module.exports = { handleViewSelf,handleViewUser };
-  

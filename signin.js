@@ -1,5 +1,5 @@
 const handleSignin = (db, bcrypt) => (req, res) => {
-  const { uname, passhash,ip} = req.body;
+  const { uname, passhash, ip} = req.body;
   if (!uname || !passhash) return res.status(400).json("Fill in all details!");
   db.select("*")
     .from("Credentials")
@@ -7,12 +7,12 @@ const handleSignin = (db, bcrypt) => (req, res) => {
     .then((data) => {
       if (data.length) {
         if (bcrypt.compareSync(passhash, data[0].passhash)) {
-            db.select("*")
+            db.select("uname")
             .from("Users")
             .where({uname})
-            .update({ ip , isonline:true })
+            .update({ ip })
             .then((data)=>
-              res.status(200).json("success")
+              res.status(200).json(data)
             )
             .catch((err)=>
             res.status(400).json("error in updating ip")
@@ -25,10 +25,10 @@ const handleSignin = (db, bcrypt) => (req, res) => {
 const handleSignout=(db) => (req,res)=>{
   const {uname} = req.body;
   if(!uname) return res.status(400).json("Fill in all details!");
-  db.select("*")
+  db.select('uname')
       .from("Users")
       .where({uname})
-      .update({ isonline:false })
+      .update({ isonline:false ,lastseen:db.fn.now()})
       .then((data)=>{ 
         if(data.length)
         return res.status(200).json("success");

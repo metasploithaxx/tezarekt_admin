@@ -1,5 +1,5 @@
 const handleOnlineUser = (db) => (req, res) => {
-    db.select('uname')
+    db.select('uname',)
       .from("Users")
       .where({ isonline:true })
       .then((data) => {
