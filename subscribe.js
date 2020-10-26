@@ -20,6 +20,7 @@ const handleSubscribe = (db) => (req, res) => {
                             .from("Users")
                             .where({uname:from})
                             .then((subsrate)=>{
+                                console.log(balance[0]);
                                 if(subsrate[0]<=balance[0])
                                 {
                                     db.select("*")
@@ -30,11 +31,12 @@ const handleSubscribe = (db) => (req, res) => {
                                                 .from("Users")
                                                 .where({uname:to})
                                                 .update({
-                                                        balance:balance[0]-subsrate[0]
+                                                        balance:balance[0].balance-subsrate[0].subsrate
                                                 })
                                                 .then((data)=>
                                                     res.status(200).json("Subscribed")
                                                 )
+                                            
                                             
                                         })
                                         .catch((err)=>{
