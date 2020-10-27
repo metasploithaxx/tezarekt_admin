@@ -3,22 +3,24 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 
-const signIn=require('./signin');
-const register = require('./register');
-const selfprofile = require('./profileView');
-const updateUserProfile = require('./updateUserProfile');
-const chatView = require('./chatView');
-const chatPost = require('./chatPost');
-const onlineusers = require('./showOnlineUsers');
-const subscribe = require('./subscribe');
-const getSubscriptionCount = require('./getSubscriptionCount');
-const isSubscribed = require('./isSubscribed');
-const privateChatPost = require('./privateChatPost');
-const privateChatView = require('./privateChatView');
-const setStatus = require('./setStatus');
-const getStatus = require('./getStatus');
-const getAllUser = require('./getAllUsers');
-const checkPassword = require('./checkPassword');
+const signIn = require('./srcPOST/signin');
+const register = require('./srcPOST/register');
+const selfprofile = require('./srcGET/profileView');
+const updateUserProfile = require('./srcPOST/updateUserProfile');
+const chatView = require('./srcGET/chatView');
+const chatPost = require('./srcPOST/chatPost');
+const onlineusers = require('./srcGET/showOnlineUsers');
+const subscribe = require('./srcPOST/subscribe');
+const getSubscriptionCount = require('./srcGET/getSubscriptionCount');
+const isSubscribed = require('./srcGET/isSubscribed');
+const privateChatPost = require('./srcPOST/privateChatPost');
+const privateChatView = require('./srcGET/privateChatView');
+const setStatus = require('./srcPOST/setStatus');
+const getStatus = require('./srcGET/getStatus');
+const getAllUser = require('./srcGET/getAllUsers');
+const checkPassword = require('./srcPOST/checkPassword');
+const viewNotification = require('./srcGET/viewNotification');
+const setNotification = require('./srcPOST/setNotification');
 
 const app = express();
 
@@ -65,7 +67,9 @@ app.get('/privateChatView/:from/:to',privateChatView.handleChatPrivateView(db));
 app.post('/setStatus',setStatus.handleSetStatus(db));
 app.get('/getStatus/:uname',getStatus.handlegetStatus(db));
 app.get('/getAllUsers',getAllUser.handlegetAllUser(db));
-app.get('./checkPassword/:uname/:passhash',checkPassword.handlecheckPassword(db,bcrypt))
+app.post('/checkPassword',checkPassword.handlecheckPassword(db,bcrypt))
+app.post('/setNotification',setNotification.handleNotificationPost(db));
+app.get('/getNotification/:uname',viewNotification.handlegetNotification(db));
 
 app.listen(
   process.env.PORT || 3000,

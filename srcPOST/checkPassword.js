@@ -1,5 +1,5 @@
 const handlecheckPassword = (db, bcrypt) => (req, res) => {
-    const { uname,passhash} = req.params;
+    const { uname,passhash} = req.body;
     if (!uname || !passhash) return res.status(400).json("Fill in all details!");
     db.select("passhash","uname")
       .from("Credentials")
