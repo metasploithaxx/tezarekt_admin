@@ -33,15 +33,26 @@ const handleSubscribe = (db) => (req, res) => {
                                                 .update({
                                                         balance:balance[0].balance-subsrate[0].subsrate
                                                 })
-                                                .then((data)=>
-                                                    res.status(200).json("Subscribed")
-                                                )
-                                            
-                                            
-                                        })
-                                        .catch((err)=>{
-                                            return res.status.status(404).json("Connection Error");
-                                        })                                          
+                                                .then((data2)=>{
+                                                    db.select("balance")
+                                                        .from("Users")
+                                                        .where({uname:from})
+                                                        .update({
+                                                                balance:balance[0].balance+subsrate[0].subsrate
+                                                        })
+                                                        .then((data)=>
+                                                            res.status(200).json("Subscribed Succecfully")
+                                                        )
+                                            }
+                                        )                                           
+                                    })
+                                    .catch((err)=>{
+                                        return res.status.status(404).json("Connection Error");
+                                    })                                          
+                                }
+                                else    
+                                {
+                                    return res.status(404).json("Not Enough Balance")
                                 }
                                 
                             })
