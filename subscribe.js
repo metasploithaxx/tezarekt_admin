@@ -41,7 +41,7 @@ const handleSubscribe = (db) => (req, res) => {
                                                                 balance:balance[0].balance+subsrate[0].subsrate
                                                         })
                                                         .then((data)=>
-                                                            res.status(200).json("Subscribed Succecfully")
+                                                            res.status(200).json("Subscribed Successfully")
                                                         )
                                             }
                                         )                                           
@@ -72,7 +72,7 @@ const handleSubscribe = (db) => (req, res) => {
                 .where({from,to})
                 .del()
                 .then((data)=>
-                    res.status(200).json("Unsubscribed")
+                    res.status(200).json("Unsubscribed Successfully")
                 )
                 .catch((err)=>{
                     return res.status.status(404).json("Connection Error");

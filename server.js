@@ -18,6 +18,7 @@ const privateChatView = require('./privateChatView');
 const setStatus = require('./setStatus');
 const getStatus = require('./getStatus');
 const getAllUser = require('./getAllUsers');
+const checkPassword = require('./checkPassword');
 
 const app = express();
 
@@ -64,6 +65,7 @@ app.get('/privateChatView/:from/:to',privateChatView.handleChatPrivateView(db));
 app.post('/setStatus',setStatus.handleSetStatus(db));
 app.get('/getStatus/:uname',getStatus.handlegetStatus(db));
 app.get('/getAllUsers',getAllUser.handlegetAllUser(db));
+app.get('./checkPassword/:uname/:passhash',checkPassword.handlecheckPassword(db,bcrypt))
 
 app.listen(
   process.env.PORT || 3000,
