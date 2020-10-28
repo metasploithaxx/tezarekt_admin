@@ -4,6 +4,7 @@ const handlegetNotification = (db) => (req, res) => {
     db.select('*')
       .from("Notification")
       .where({ owner : uname })
+      .orderBy('timestamp','desc')
       .then((data) => {
         if (data.length) {
           return res.status(200).json(data);
