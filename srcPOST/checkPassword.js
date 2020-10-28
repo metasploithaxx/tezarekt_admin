@@ -7,8 +7,8 @@ const handlecheckPassword = (db, bcrypt) => (req, res) => {
       .then((data) => {
         if (data.length) {
           if (bcrypt.compareSync(passhash, data[0].passhash)) {
-             return res.status(200).json("true");
-          } else return res.status(400).json("false");
+             return res.status(200).json(true);
+          } else return res.status(400).json(false);
         } else return res.status(404).json("username not registered");
       })
       .catch((err) => res.status(400).json("connection error"));
