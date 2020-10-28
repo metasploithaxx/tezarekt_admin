@@ -5,6 +5,7 @@ const handlecheckPassword = (db, bcrypt) => (req, res) => {
       .from("Credentials")
       .where({ uname })
       .then((data) => {
+        
         if (data.length) {
           if (bcrypt.compareSync(passhash, data[0].passhash)) {
              return res.status(200).json(true);
