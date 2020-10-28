@@ -21,6 +21,7 @@ const getAllUser = require('./srcGET/getAllUsers');
 const checkPassword = require('./srcPOST/checkPassword');
 const viewNotification = require('./srcGET/viewNotification');
 const setNotification = require('./srcPOST/setNotification');
+const delNotification = require('./srcPOST/deleteNotification');
 
 const app = express();
 
@@ -70,6 +71,7 @@ app.get('/getAllUsers',getAllUser.handlegetAllUser(db));
 app.post('/checkPassword',checkPassword.handlecheckPassword(db,bcrypt))
 app.post('/setNotification',setNotification.handleNotificationPost(db));
 app.get('/getNotification/:uname',viewNotification.handlegetNotification(db));
+app.post('/delNotification',delNotification.handleNotificationDelete(db));
 
 app.listen(
   process.env.PORT || 3000,
