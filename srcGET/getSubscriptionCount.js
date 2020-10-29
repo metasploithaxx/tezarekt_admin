@@ -9,5 +9,17 @@ const handleViewSubscriptionCount = (db) => (req, res) => {
       })
       .catch((err) => res.status(400).json(err));
   };
+
+  const handleViewSubscribers = (db) => (req, res) => {
+    const {to} = req.params;
+    if (!to) return res.status(400).json("Fill in all details!");
+    db.select("*")
+      .from("Subscription")
+      .where({to})
+      .then((data) => {
+          return res.status(200).json(data);
+      })
+      .catch((err) => res.status(400).json(err));
+  };
   
-  module.exports = { handleViewSubscriptionCount };
+  module.exports = { handleViewSubscriptionCount,handleViewSubscribers };
