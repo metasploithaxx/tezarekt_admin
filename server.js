@@ -72,6 +72,9 @@ app.post('/checkPassword',checkPassword.handlecheckPassword(db,bcrypt))
 app.post('/setNotification',setNotification.handleNotificationPost(db));
 app.get('/getNotification/:uname',viewNotification.handlegetNotification(db));
 app.post('/delNotification',delNotification.handleNotificationDelete(db));
+app.get('/viewAllSubscriber/:to',getSubscriptionCount.handleViewSubscribers(db));
+app.get('/getToi/:uname',selfprofile.handleViewTOI(db));
+app.post('/setTOI',updateUserProfile.handleUpdateToi(db));
 
 app.listen(
   process.env.PORT || 3000,
