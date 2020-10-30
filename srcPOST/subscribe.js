@@ -91,18 +91,7 @@ const handleSubscribe = (db) => (req, res) => {
                                     set.forEach(printOne); 
                                     
                                     finallist.sort(function(a, b) {
-                                      console.log("%%%");
-                                      console.log(a +" ^ "+b)
-                                      if(mapToiTo1.get(a) >= mapToiTo1.get(b)){
-                                        console.log("@@");
-                                        console.log(mapToiTo1[a]);
-                                        return true;
-                                      }
-                                      else{
-                                        console.log("##");
-                                        console.log(mapToiTo1[a]);
-                                        return false;
-                                      }
+                                      return obj[b]-obj[a]
                                     });
                                     console.log(finallist);
                                     return res
@@ -110,7 +99,8 @@ const handleSubscribe = (db) => (req, res) => {
                                       .json("Subscribed Successfully");
                                   })
                                   .catch((err) =>
-                                    res.status(400).json("uname not%%%%")
+                                  {console.log(err)
+                                    return res.status(400).json("uname not%%%%")}
                                   );
                               
                           })
