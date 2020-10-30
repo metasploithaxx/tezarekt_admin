@@ -2,6 +2,8 @@ const handleSubscribe = (db) => (req, res) => {
   const { from, to, flag } = req.body;
   if (!(from && to && flag))
     return res.status(400).json("Fill in all details!");
+
+    // to is a user and from is a person to whom we are subscribing
   if (flag === "true") {
     db.select("*")
       .from("Subscription")
@@ -10,15 +12,29 @@ const handleSubscribe = (db) => (req, res) => {
         if (data.length) {
           return res.status(400).json("Already Subscribed");
         } else {
-          db.select("balance")
+
+          var balanceFrom=0,balanceTo=0,subsrateFrom=0;
+          var toilistFrom = [] , toilistTo = [] , rtoiTo = [];
+          var mapToiTo = {};
+
+          db.select('balance','toi','rtoi','mapoftoi')
             .from("Users")
             .where({ uname: to })
-            .then((balance) => {
-              db.select("subsrate")
+            .then((TO) => {
+              balanceTo = TO[0].balance;
+              toilistTo = TO[0].toi;
+              rtoiTo = TO[0].rtoi;
+              mapToiTo = JSON.parse(TO[0].mapoftoi);
+              db.select('subsrate','balance','toi')
                 .from("Users")
                 .where({ uname: from })
-                .then((subsrate) => {
-                  if (subsrate[0] <= balance[0]) {
+                .then((FROM) => {
+                  balanceFrom = FROM[0].balance;
+                  subsrateFrom = FROM[0].subsrate;
+                  toilistFrom  = FROM[0].toi; 
+                  console.log(subsrateFrom +" "+balanceTo);
+                  if ( +subsrateFrom <= +balanceTo) {
+                    console.log("**")
                     db.select("*")
                       .from("Subscription")
                       .insert({ from, to })
@@ -27,32 +43,78 @@ const handleSubscribe = (db) => (req, res) => {
                           .from("Users")
                           .where({ uname: to })
                           .update({
-                            balance: balance[0].balance - subsrate[0].subsrate,
+                            balance: balanceTo - subsrateFrom,
                           })
-                          .then((data2) => {})
-                          .catch((err) => res.status(400).json("uname n&&&&"));
-                        db.select("balance")
-                          .from("Users")
-                          .where({ uname: from })
-                          .then((Bal)=>{
-                            db.select("balance")
-                            .from("Users")
-                            .where({ uname: from })
-                            .update({
-                                balance : +Bal[0].balance + +subsrate[0].subsrate,
-                              })
-                              .then((data3) =>
-                                res.status(200).json("Subscribed Successfully")
-                              )
-                              .catch((err) =>
-                                res.status(400).json("uname not%%%%")
-                              );
+                          .then((data2) => {
                             
+                                db.select("balance")
+                                  .from("Users")
+                                  .where({ uname: from })
+                                  .update({
+                                    balance:
+                                      +balanceFrom + +subsrateFrom,
+                                  })
+                                  .then((data3) => {
+                                    var mapToiTo1 = new Map();
+                                    for(let i=0;i<toilistFrom.length;i++){
+                                      if(mapToiTo1.has(toilistFrom[i])){
+                                        mapToiTo1[toilistFrom[i]]++;
+                                      }
+                                      else{
+                                        mapToiTo1.set(toilistFrom[i],1);
+                                      }
+                                    }
+                                    mapToiTo1.set(toilistFrom[1],4);
+                                    console.log(mapToiTo1);
+                                    let obj = {};
+
+                                    mapToiTo1.forEach(function(value, key){
+                                        obj[key] = value
+                                    });
+
+                                    console.log(obj);
+
+                                    var set = new Set();
+                                    console.log(toilistFrom)
+                                    if(rtoiTo!=null)
+                                    for(let i=0;i<rtoi.length;i++){
+                                      set.add(rtoiTo[i]);
+                                    }
+                                    for(let i=0;i<toilistFrom.length;i++){
+                                      set.add(toilistFrom[i]);
+                                    }
+                                    var finallist = [];
+                                    function printOne(values) 
+                                    { 
+                                        finallist.push(values); 
+                                    } 
+                                    set.forEach(printOne); 
+                                    
+                                    finallist.sort(function(a, b) {
+                                      console.log("%%%");
+                                      console.log(a +" ^ "+b)
+                                      if(mapToiTo1.get(a) >= mapToiTo1.get(b)){
+                                        console.log("@@");
+                                        console.log(mapToiTo1[a]);
+                                        return true;
+                                      }
+                                      else{
+                                        console.log("##");
+                                        console.log(mapToiTo1[a]);
+                                        return false;
+                                      }
+                                    });
+                                    console.log(finallist);
+                                    return res
+                                      .status(200)
+                                      .json("Subscribed Successfully");
+                                  })
+                                  .catch((err) =>
+                                    res.status(400).json("uname not%%%%")
+                                  );
+                              
                           })
-                          .catch((err) =>
-                                res.status(400).json("uname not###")
-                              );
-                          
+                          .catch((err) => res.status(400).json("uname not###"));
                       })
                       .catch((err) => {
                         return res.status.status(404).json("Connection Error");
