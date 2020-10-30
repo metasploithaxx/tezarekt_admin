@@ -19,6 +19,7 @@ const handleUpdateProfile = (db) => (req, res) => {
       })
       .catch((err) => res.status(400).json("connection error"));
   };
+  
   const handleUpdateToi = (db) => (req, res) => {
     const {uname,toi} = req.body;
     if (!(toi && uname))

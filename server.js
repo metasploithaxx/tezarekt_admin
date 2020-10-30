@@ -22,6 +22,7 @@ const checkPassword = require('./srcPOST/checkPassword');
 const viewNotification = require('./srcGET/viewNotification');
 const setNotification = require('./srcPOST/setNotification');
 const delNotification = require('./srcPOST/deleteNotification');
+const subscriberNotification = require('./srcPOST/subscriberNotification');
 
 const app = express();
 
@@ -75,6 +76,7 @@ app.post('/delNotification',delNotification.handleNotificationDelete(db));
 app.get('/viewAllSubscriber/:to',getSubscriptionCount.handleViewSubscribers(db));
 app.get('/getToi/:uname',selfprofile.handleViewTOI(db));
 app.post('/setTOI',updateUserProfile.handleUpdateToi(db));
+app.post('/subscriberNotification',subscriberNotification.handleSubNotificationPost(db));
 
 app.listen(
   process.env.PORT || 3000,
