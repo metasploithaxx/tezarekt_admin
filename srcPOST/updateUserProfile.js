@@ -45,7 +45,8 @@ const handleUpdateToi = (db) => (req, res) => {
     .then((oldToidata) => {
       var oldtoilist = oldToidata[0].toi;
       console.log(oldtoilist);
-      if (oldToidata != null) {
+      if (typeof oldtoilist != "undefined" && oldtoilist != null && oldtoilist != null && oldtoilist.length > 0) {
+        console.log("%%");
         for (let k = 0; k < oldtoilist.length; k++) {
           db.select("*")
             .from("Tags")
@@ -70,6 +71,7 @@ const handleUpdateToi = (db) => (req, res) => {
             .catch((err) => res.status(400).json("old toi iterating error"));
         }
       }
+      console.log("$$")
       db.select("*")
         .from("Users")
         .where({ uname })
@@ -135,8 +137,7 @@ const handleUpdateToi = (db) => (req, res) => {
         })
         .catch((err) => res.status(400).json(err));
     })
-    .catch((erroldToi) => {
-      return res.status(400).json("unsuccess oldToi");
-    });
+    .catch((erroldToi) => res.status(400).json("unsuccess oldToi")
+    );
 };
 module.exports = { handleUpdateProfile, handleUpdateToi };
