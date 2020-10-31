@@ -3,12 +3,27 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 
-const signIn=require('./signin');
-const register = require('./register');
-const selfprofile = require('./profileView');
-const updateUserProfile = require('./updateUserProfile');
-const chatView = require('./chatView');
-const chatPost = require('./chatPost');
+const signIn = require('./srcPOST/signin');
+const register = require('./srcPOST/register');
+const selfprofile = require('./srcGET/profileView');
+const updateUserProfile = require('./srcPOST/updateUserProfile');
+const chatView = require('./srcGET/chatView');
+const chatPost = require('./srcPOST/chatPost');
+const onlineusers = require('./srcGET/showOnlineUsers');
+const subscribe = require('./srcPOST/subscribe');
+const getSubscriptionCount = require('./srcGET/getSubscriptionCount');
+const isSubscribed = require('./srcGET/isSubscribed');
+const privateChatPost = require('./srcPOST/privateChatPost');
+const privateChatView = require('./srcGET/privateChatView');
+const setStatus = require('./srcPOST/setStatus');
+const getStatus = require('./srcGET/getStatus');
+const getAllUser = require('./srcGET/getAllUsers');
+const checkPassword = require('./srcPOST/checkPassword');
+const viewNotification = require('./srcGET/viewNotification');
+const setNotification = require('./srcPOST/setNotification');
+const delNotification = require('./srcPOST/deleteNotification');
+const subscriberNotification = require('./srcPOST/subscriberNotification');
+const getrecommendedusers = require('./srcGET/getRecommendedUsers');
 
 const app = express();
 
@@ -37,18 +52,34 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-// app.get("/", getUsers.handleUsers(db));
 app.post("/signin", signIn.handleSignin(db, bcrypt));
+app.post('/signout',signIn.handleSignout(db));
 app.post("/register", register.handleRegister(db));
 app.get("/profile/self/:uname",selfprofile.handleViewSelf(db));
+app.get("/profile/user/:uname",selfprofile.handleViewUser(db));
 app.post("/updateUserProfile",updateUserProfile.handleUpdateProfile(db));
-app.get("/chat/:owner/:uname",chatView.handleChatView(db));
+app.get("/chatAll/:owner/:uname",chatView.handleChatAllView(db));
+app.get("/chatSubs/:owner/:uname",chatView.handleChatSubsView(db));
 app.post("/chatPost",chatPost.handleChatPost(db));
-// app.get("/profile/:id", profile.getProfile(db));
-// app.delete("/profile/:id", profile.deleteProfile(db));
-// app.put("/image", image.handleImage(db));
-// app.post("/imageAPI", image.handleAPI);
-// app.post("/profile/:id", profile.changePass(db));
+app.get("/onlineUsers",onlineusers.handleOnlineUser(db));
+app.post("/subscribe",subscribe.handleSubscribe(db));
+app.get('/getSubscriptionCount/:from',getSubscriptionCount.handleViewSubscriptionCount(db));
+app.get('/isSubscribed/:from/:to',isSubscribed.handleIsSubscribed(db));
+app.post("/privateChatPost",privateChatPost.handlePrivateChatPost(db));
+app.get('/privateChatView/:from/:to',privateChatView.handleChatPrivateView(db));
+app.post('/setStatus',setStatus.handleSetStatus(db));
+app.get('/getStatus/:uname',getStatus.handlegetStatus(db));
+app.get('/getAllUsers',getAllUser.handlegetAllUser(db));
+app.post('/checkPassword',checkPassword.handlecheckPassword(db,bcrypt))
+app.post('/setNotification',setNotification.handleNotificationPost(db));
+app.get('/getNotification/:uname',viewNotification.handlegetNotification(db));
+app.post('/delNotification',delNotification.handleNotificationDelete(db));
+app.get('/viewAllSubscriber/:to',getSubscriptionCount.handleViewSubscribers(db));
+app.get('/getToi/:uname',selfprofile.handleViewTOI(db));
+app.post('/setTOI',updateUserProfile.handleUpdateToi(db));
+app.post('/subscriberNotification',subscriberNotification.handleSubNotificationPost(db));
+app.get('/getrecommendedusers/:uname',getrecommendedusers.handlegetRecommendedUsers(db));
+
 
 app.listen(
   process.env.PORT || 3000,
