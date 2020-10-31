@@ -23,6 +23,7 @@ const viewNotification = require('./srcGET/viewNotification');
 const setNotification = require('./srcPOST/setNotification');
 const delNotification = require('./srcPOST/deleteNotification');
 const subscriberNotification = require('./srcPOST/subscriberNotification');
+const getrecommendedusers = require('./srcGET/getRecommendedUsers');
 
 const app = express();
 
@@ -77,6 +78,8 @@ app.get('/viewAllSubscriber/:to',getSubscriptionCount.handleViewSubscribers(db))
 app.get('/getToi/:uname',selfprofile.handleViewTOI(db));
 app.post('/setTOI',updateUserProfile.handleUpdateToi(db));
 app.post('/subscriberNotification',subscriberNotification.handleSubNotificationPost(db));
+app.get('/getrecommendedusers/:uname',getrecommendedusers.handlegetRecommendedUsers(db));
+
 
 app.listen(
   process.env.PORT || 3000,

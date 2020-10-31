@@ -3,7 +3,7 @@ const handleSubscribe = (db) => (req, res) => {
   if (!(from && to && flag))
     return res.status(400).json("Fill in all details!");
 
-    // to is a user and from is a person to whom we are subscribing
+  // to is a user and from is a person to whom we are subscribing
   if (flag === "true") {
     db.select("*")
       .from("Subscription")
@@ -12,29 +12,30 @@ const handleSubscribe = (db) => (req, res) => {
         if (data.length) {
           return res.status(400).json("Already Subscribed");
         } else {
-
-          var balanceFrom=0,balanceTo=0,subsrateFrom=0;
-          var toilistFrom = [] , toilistTo = [] , rtoiTo = [];
+          var balanceFrom = 0,
+            balanceTo = 0,
+            subsrateFrom = 0;
+          var toilistFrom = [],
+            toilistTo = [];
           var mapToiTo = {};
 
-          db.select('balance','toi','rtoi','mapoftoi')
+          db.select("balance", "toi", "mapoftoi")
             .from("Users")
             .where({ uname: to })
             .then((TO) => {
               balanceTo = TO[0].balance;
               toilistTo = TO[0].toi;
-              rtoiTo = TO[0].rtoi;
-              mapToiTo = JSON.parse(TO[0].mapoftoi);
-              db.select('subsrate','balance','toi')
+              mapToiTo = TO[0].mapoftoi;
+              db.select("subsrate", "balance", "toi")
                 .from("Users")
                 .where({ uname: from })
                 .then((FROM) => {
                   balanceFrom = FROM[0].balance;
                   subsrateFrom = FROM[0].subsrate;
-                  toilistFrom  = FROM[0].toi; 
-                  console.log(subsrateFrom +" "+balanceTo);
-                  if ( +subsrateFrom <= +balanceTo) {
-                    console.log("**")
+                  toilistFrom = FROM[0].toi;
+                  console.log(subsrateFrom + " " + balanceTo);
+                  if (+subsrateFrom <= +balanceTo) {
+                    console.log("**");
                     db.select("*")
                       .from("Subscription")
                       .insert({ from, to })
@@ -46,73 +47,46 @@ const handleSubscribe = (db) => (req, res) => {
                             balance: balanceTo - subsrateFrom,
                           })
                           .then((data2) => {
-                            
-                                db.select("balance")
+                            db.select("balance")
+                              .from("Users")
+                              .where({ uname: from })
+                              .update({
+                                balance: +balanceFrom + +subsrateFrom,
+                              })
+                              .then((data3) => {
+                                console.log("subscrbe");
+                                console.log(mapToiTo);
+                                if (mapToiTo != null) {
+                                  mapToiTo = JSON.parse(mapToiTo);
+                                } else {
+                                  mapToiTo = {};
+                                }
+                                console.log(mapToiTo);
+                                for (let i = 0; i < toilistFrom.length; i++) {
+                                  if (!(toilistFrom[i] in mapToiTo)) {
+                                    mapToiTo[toilistFrom[i]] = 0;
+                                  }
+                                  mapToiTo[toilistFrom[i]] =
+                                    +mapToiTo[toilistFrom[i]] + 1;
+                                }
+                                console.log(mapToiTo);
+
+                                db.select("*")
                                   .from("Users")
-                                  .where({ uname: from })
+                                  .where({ uname: to })
                                   .update({
-                                    balance:
-                                      +balanceFrom + +subsrateFrom,
+                                    mapoftoi: mapToiTo,
                                   })
-                                  .then((data3) => {
-                                    var mapToiTo1 = new Map();
-                                    for(let i=0;i<toilistFrom.length;i++){
-                                      if(mapToiTo1.has(toilistFrom[i])){
-                                        mapToiTo1[toilistFrom[i]]++;
-                                      }
-                                      else{
-                                        mapToiTo1.set(toilistFrom[i],1);
-                                      }
-                                    }
-                                    mapToiTo1.set(toilistFrom[1],4);
-                                    console.log(mapToiTo1);
-                                    let obj = {};
-
-                                    mapToiTo1.forEach(function(value, key){
-                                        obj[key] = value
-                                    });
-
-                                    console.log(obj);
-
-                                    var set = new Set();
-                                    console.log(toilistFrom)
-                                    if(rtoiTo!=null)
-                                    for(let i=0;i<rtoi.length;i++){
-                                      set.add(rtoiTo[i]);
-                                    }
-                                    for(let i=0;i<toilistFrom.length;i++){
-                                      set.add(toilistFrom[i]);
-                                    }
-                                    var finallist = [];
-                                    function printOne(values) 
-                                    { 
-                                        finallist.push(values); 
-                                    } 
-                                    set.forEach(printOne); 
-                                    
-                                    finallist.sort(function(a, b) {
-                                      console.log("%%%");
-                                      console.log(a +" ^ "+b)
-                                      if(mapToiTo1.get(a) >= mapToiTo1.get(b)){
-                                        console.log("@@");
-                                        console.log(mapToiTo1[a]);
-                                        return true;
-                                      }
-                                      else{
-                                        console.log("##");
-                                        console.log(mapToiTo1[a]);
-                                        return false;
-                                      }
-                                    });
-                                    console.log(finallist);
+                                  .then((finalllly) => {
                                     return res
                                       .status(200)
                                       .json("Subscribed Successfully");
                                   })
                                   .catch((err) =>
-                                    res.status(400).json("uname not%%%%")
+                                    res.status(400).json("error in updating")
                                   );
-                              
+                              })
+                              .catch((err) => res.status(400).json(err));
                           })
                           .catch((err) => res.status(400).json("uname not###"));
                       })
@@ -124,7 +98,8 @@ const handleSubscribe = (db) => (req, res) => {
                   }
                 })
                 .catch((err) => res.status(400).json("uname not found"));
-            });
+            })
+            .catch((err) => res.status(404).json(err));
         }
       });
   } else {
@@ -137,9 +112,57 @@ const handleSubscribe = (db) => (req, res) => {
             .from("Subscription")
             .where({ from, to })
             .del()
-            .then((data) => res.status(200).json("Unsubscribed Successfully"))
+            .then((data) => {
+              var toilistFrom = [],
+                toilistTo = [];
+              var mapToiTo = {};
+
+              db.select("balance", "toi", "mapoftoi")
+                .from("Users")
+                .where({ uname: to })
+                .then((TO) => {
+                  toilistTo = TO[0].toi;
+                  mapToiTo = TO[0].mapoftoi;
+                  db.select("subsrate", "balance", "toi")
+                    .from("Users")
+                    .where({ uname: from })
+                    .then((FROM) => {
+                      console.log("Unsubscrbe");
+                      toilistFrom = FROM[0].toi;
+                      console.log(mapToiTo);
+                      if (mapToiTo != null) {
+                        mapToiTo = JSON.parse(mapToiTo);
+                      }
+                      else{
+                        mapToiTo = {};
+                      }
+                      
+                      console.log(mapToiTo);
+                      for (let i = 0; i < toilistFrom.length; i++) {
+                        if (toilistFrom[i] in mapToiTo) {
+                          mapToiTo[toilistFrom[i]] =
+                            +mapToiTo[toilistFrom[i]] - 1;
+                        }
+                      }
+                      console.log(mapToiTo);
+                      db.select("*")
+                        .from("Users")
+                        .where({ uname: to })
+                        .update({ mapoftoi: mapToiTo })
+                        .then((finalllly) => {
+                          return res
+                            .status(200)
+                            .json("Unsubscribed Successfully");
+                        })
+                        .catch((err) =>
+                          res.status(400).json("error in updating")
+                        );
+                    })
+                    .catch((err) => {});
+                });
+            })
             .catch((err) => {
-              return res.status.status(404).json("Connection Error");
+              return res.status(404).json("Connection Error");
             });
         } else {
           res.status(200).json("Already Unsubscribed");
