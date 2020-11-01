@@ -22,8 +22,10 @@ const checkPassword = require('./srcPOST/checkPassword');
 const viewNotification = require('./srcGET/viewNotification');
 const setNotification = require('./srcPOST/setNotification');
 const delNotification = require('./srcPOST/deleteNotification');
-const subscriberNotification = require('./srcPOST/subscriberNotification');
+const streamingNotification = require('./srcPOST/subscriberNotification');
 const getrecommendedusers = require('./srcGET/getRecommendedUsers');
+const addSchedule = require('./srcPOST/addSchedule')
+const getSchedule = require('./srcGET/getSchedule')
 
 const app = express();
 
@@ -77,8 +79,11 @@ app.post('/delNotification',delNotification.handleNotificationDelete(db));
 app.get('/viewAllSubscriber/:to',getSubscriptionCount.handleViewSubscribers(db));
 app.get('/getToi/:uname',selfprofile.handleViewTOI(db));
 app.post('/setTOI',updateUserProfile.handleUpdateToi(db));
-app.post('/subscriberNotification',subscriberNotification.handleSubNotificationPost(db));
+app.post('/subscriberNotification',streamingNotification.handleSubNotificationPost(db));
 app.get('/getrecommendedusers/:uname',getrecommendedusers.handlegetRecommendedUsers(db));
+app.put('/streamEnd/:uname',streamingNotification.handleEndStream(db));
+app.post('/schedule/add',addSchedule.handleSchedulePost(db));
+app.get('/schedule/:owner',getSchedule.handlegetSchedule(db));
 
 
 app.listen(
